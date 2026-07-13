@@ -1,0 +1,18 @@
+﻿ProductID,ProductName,Category,Brand,StandardCost,SalePrice
+P01,Laptop A,Laptop,Dell,10000000,12000000
+P02,Mouse B,Accessory,HP,100000,150000
+P03,Keyboard C,Accessory,Asus,200000,300000
+P04,Monitor D,Monitor,Samsung,2500000,3200000
+P05,USB 64GB,Storage,SanDisk,120000,180000
+P03,Keyboard C Pro,Accessory,ASUS,220000,320000
+P06,,Accessory,Logitech,350000,450000
+P07,Headset E,,Sony,500000,700000
+P08,Webcam F,Accessory,,450000,650000
+P09,SSD 512GB,Storage,Kingston,0,1200000
+P10,Router G,Network,TP-Link,-500000,900000
+P11,Printer H,Printer,Canon,1800000,0
+P12,Scanner I,Office,Epson,2200000,-100000
+ P13 ,  Smart TV J  , Electronics , LG ,7000000,8500000
+P14,tablet k,device,samsung,3500000,4200000
+,Camera L,Electronics,Canon,4500000,5200000
+P15,NULL,Accessory,Unknown,100000,150000
