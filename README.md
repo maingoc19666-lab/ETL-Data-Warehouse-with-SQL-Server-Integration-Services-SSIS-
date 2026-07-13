@@ -1,37 +1,37 @@
-# ETL Data Warehouse with SQL Server Integration Services (SSIS)
+# Sales Data Warehouse ETL with SQL Server Integration Services (SSIS)
 
 ## Overview
 
-This project implements an **ETL (Extract - Transform - Load)** process using **SQL Server Integration Services (SSIS)** to build a Sales Data Warehouse (**BanHangDWH**) from multiple data sources.
+This project demonstrates an **ETL (Extract, Transform, Load)** process using **SQL Server Integration Services (SSIS)** to build a Sales Data Warehouse (**BanHangDWH**) from multiple heterogeneous data sources.
 
-The project was developed as part of a Data Warehouse / Big Data Management assignment.
+The project focuses on extracting data, cleaning and transforming it, loading dimension and fact tables, and validating the final warehouse.
 
 ---
 
 ## Project Objectives
 
-- Extract data from multiple heterogeneous data sources.
-- Clean and transform data.
+- Extract data from multiple data sources.
+- Clean and transform raw data.
 - Build dimension tables.
-- Load fact table.
-- Validate the loaded data using SQL queries.
+- Load the fact table.
+- Validate the loaded data.
 
 ---
 
 ## Data Sources
 
-### Source 1 – SQL Server Database
+### 1. SQL Server Database (Online)
 
 Tables:
 
 - Customers
 - Orders
 
-### Source 2 – CSV File
+> **Note:** The SQL Server database was provided for the assignment and is accessed through an online server.
 
-```
-products.csv
-```
+### 2. CSV File
+
+`products.csv`
 
 Contains:
 
@@ -42,17 +42,13 @@ Contains:
 - StandardCost
 - SalePrice
 
-### Source 3 – Excel File
+### 3. Excel File
 
-```
-promotion.xlsx
-```
+`promotion.xlsx`
 
 Sheet:
 
-```
-Promotions
-```
+`Promotions`
 
 Contains:
 
@@ -64,14 +60,12 @@ Contains:
 
 ## Data Warehouse Schema
 
-The ETL process loads data into four tables:
+The warehouse consists of four tables:
 
 - **DimCustomer**
 - **DimProduct**
 - **DimDate**
 - **FactSales**
-
-### Star Schema
 
 ```
                 DimCustomer
@@ -82,25 +76,21 @@ DimDate ------- FactSales ------- DimProduct
 
 ---
 
-## ETL Workflow
+## ETL Process
 
-### 1. Load DimCustomer
+### Load DimCustomer
 
-- Read data from Customers
-- Replace missing phone numbers with `"Unknown"`
+- Read customer data from SQL Server
+- Replace missing phone numbers with **"Unknown"**
 - Remove duplicate CustomerID
-- Load into DimCustomer
+- Load into **DimCustomer**
 
----
+### Load DimProduct
 
-### 2. Load DimProduct
+- Read data from **products.csv**
+- Load into **DimProduct**
 
-- Read data from CSV file
-- Load into DimProduct
-
----
-
-### 3. Load DimDate
+### Load DimDate
 
 - Extract OrderDate
 - Generate:
@@ -109,69 +99,26 @@ DimDate ------- FactSales ------- DimProduct
   - Month
   - Year
 - Remove duplicate dates
-- Load into DimDate
+- Load into **DimDate**
 
----
+### Load FactSales
 
-### 4. Load FactSales
-
-Transformations include:
-
-- Keep only:
+- Filter invalid orders
   - Quantity > 0
   - UnitPrice > 0
-- Join promotion data using:
-  - ProductID
-  - Order Month
+- Merge promotion data using ProductID and Order Month
 - Replace missing DiscountRate with 0
-- Lookup surrogate keys:
+- Lookup:
   - CustomerKey
   - ProductKey
   - DateKey
 - Calculate:
 
 ```
-RevenueAfterDiscount =
-Quantity × UnitPrice × (1 − DiscountRate)
+RevenueAfterDiscount = Quantity × UnitPrice × (1 − DiscountRate)
 ```
 
-- Load into FactSales
-
----
-
-## Data Validation
-
-After loading, SQL queries are executed to verify:
-
-- Number of records in each table
-- Missing foreign keys
-- Invalid revenue values
-- NULL values
-
----
-
-## Project Structure
-
-```
-├── Database/
-│   ├── CreateTables.sql
-│   └── ValidationQueries.sql
-│
-├── SSIS/
-│   ├── BanHangETL.dtsx
-│   └── SSIS_Project.sln
-│
-├── Data/
-│   ├── products.csv
-│   └── promotion.xlsx
-│
-├── Images/
-│   ├── Package.png
-│   ├── ControlFlow.png
-│   └── DataFlow.png
-│
-└── README.md
-```
+- Load into **FactSales**
 
 ---
 
@@ -181,56 +128,63 @@ After loading, SQL queries are executed to verify:
 - SQL Server Integration Services (SSIS)
 - SQL Server Management Studio (SSMS)
 - Microsoft Excel
-- CSV Files
+- CSV
 
 ---
 
-## ETL Components Used
+## Project Structure
 
-- OLE DB Source
-- Flat File Source
-- Excel Source
-- Derived Column
-- Data Conversion
-- Sort
-- Aggregate
-- Merge Join
-- Lookup
-- Conditional Split
-- OLE DB Destination
+```
+BanHangDWH-SSIS-ETL
+│
+├── Database/
+│   ├── CreateTables.sql
+│   └── ValidationQueries.sql
+│
+├── SSIS/
+│   ├── BanHangETL.sln
+│   ├── BanHangETL.dtproj
+│   └── *.dtsx
+│
+├── Data/
+│   ├── products.csv
+│   └── promotion.xlsx
+│
+├── Images/
+│   ├── ControlFlow.png
+│   ├── LoadDimCustomer.png
+│   ├── LoadDimProduct.png
+│   ├── LoadDimDate.png
+│   ├── LoadFactSales.png
+│   └── PackageExecution.png
+│
+├── Docs/
+│   └── Assignment.pdf
+│
+├── README.md
+└── .gitignore
+```
 
 ---
 
-## Results
+## Validation
 
-The ETL package successfully:
+The following SQL queries are used to validate the ETL result:
 
-- Extracts data from multiple sources
-- Cleans and transforms data
-- Loads all dimension tables
-- Loads the FactSales table
-- Calculates discounted revenue
-- Produces a complete Sales Data Warehouse
+- Count records in each table
+- Check for missing foreign keys
+- Verify RevenueAfterDiscount is not NULL or negative
 
 ---
 
 ## Screenshots
 
-Add screenshots of:
+The repository includes screenshots of:
 
 - Control Flow
-- Data Flow
-- Package Execution
-- SSMS query results
-
-Example:
-
-```
-Images/
-    ControlFlow.png
-    DataFlow.png
-    PackageExecution.png
-```
+- Data Flow for each package
+- Package execution
+- ETL results
 
 ---
 
@@ -238,4 +192,4 @@ Images/
 
 **Vũ Mai**
 
-Data Warehouse & ETL Project using SQL Server Integration Services (SSIS)
+Course Project – Data Warehouse & ETL using SQL Server Integration Services (SSIS)
